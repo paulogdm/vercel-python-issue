@@ -1,16 +1,18 @@
-async def app(scope, receive, send):
-    assert scope["type"] == "http"
-    await send(
-        {
-            "type": "http.response.start",
-            "status": 200,
-            "headers": [[b"content-type", b"text/html"]],
-        }
-    )
-    await send(
-        {
-            "type": "http.response.body",
-            "body": b"asgi-function:RANDOMNESS_PLACEHOLDER"
-        }
-    )
-    
+from sanic import Sanic
+from sanic.response import json
+app = Sanic()
+
+
+@app.route('/')
+@app.route('/<path:path>')
+async def index(request, path=""):
+    return json({
+        "parsed": True,
+        "url": request.url,
+        "query_string": request.query_string,
+        "args": request.args,
+        "query_args": request.query_args,
+     })
+
+     
+
